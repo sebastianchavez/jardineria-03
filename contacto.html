@@ -40,21 +40,22 @@
           <a href="precios.html" class="nav-link text-forest font-medium">Precios</a>
           <a href="contacto.html" class="btn-primary text-sm">Contacto<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg></a>
         </div>
-        <button id="mobile-menu-btn" class="lg:hidden text-forest">
+        <button id="mobile-menu-btn" type="button" class="lg:hidden text-forest" aria-label="Abrir menú" aria-controls="mobile-menu" aria-expanded="false">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
         </button>
       </div>
     </div>
-    <div id="mobile-menu" class="mobile-menu fixed top-20 right-0 bottom-0 w-72 bg-white transform translate-x-full lg:hidden z-40 transition-transform duration-300 shadow-2xl overflow-y-auto">
-      <div class="flex flex-col p-6 gap-4">
-        <a href="index.html" class="text-forest font-medium py-2 border-b border-gray-100">Inicio</a>
-        <a href="nosotros.html" class="text-forest font-medium py-2 border-b border-gray-100">Nosotros</a>
-        <a href="servicios.html" class="text-forest font-medium py-2 border-b border-gray-100">Servicios</a>
-        <a href="galeria.html" class="text-forest font-medium py-2 border-b border-gray-100">Galería</a>
-        <a href="clases.html" class="text-forest font-medium py-2 border-b border-gray-100">Clases</a>
-        <a href="precios.html" class="text-forest font-medium py-2 border-b border-gray-100">Precios</a>
-        <a href="contacto.html" class="btn-primary mt-4 justify-center">Contacto</a>
-      </div>
+  </nav>
+
+  <nav id="mobile-menu" class="mobile-menu lg:hidden" aria-label="Navegación móvil" aria-hidden="true" inert>
+    <div class="flex flex-col p-6 gap-4">
+      <a href="index.html" class="text-forest font-medium py-2 border-b border-gray-100">Inicio</a>
+      <a href="nosotros.html" class="text-forest font-medium py-2 border-b border-gray-100">Nosotros</a>
+      <a href="servicios.html" class="text-forest font-medium py-2 border-b border-gray-100">Servicios</a>
+      <a href="galeria.html" class="text-forest font-medium py-2 border-b border-gray-100">Galería</a>
+      <a href="clases.html" class="text-forest font-medium py-2 border-b border-gray-100">Clases</a>
+      <a href="precios.html" class="text-forest font-medium py-2 border-b border-gray-100">Precios</a>
+      <a href="contacto.html" class="btn-primary mt-4 justify-center">Contacto</a>
     </div>
   </nav>
 
@@ -76,7 +77,7 @@
   <!-- INFO RÁPIDA -->
   <section class="py-12 bg-white border-b border-gray-100">
     <div class="container mx-auto px-4 lg:px-8">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <a href="tel:+56912345678" class="flex items-center gap-4 p-6 rounded-2xl bg-cream hover:bg-leaf/5 transition-colors reveal">
           <div class="w-14 h-14 bg-leaf text-white rounded-full flex items-center justify-center flex-shrink-0">
             <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11 11 0 005.517 5.517l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
@@ -229,7 +230,7 @@
   <!-- FOOTER -->
   <footer class="bg-forest text-white pt-16 pb-8">
     <div class="container mx-auto px-4 lg:px-8">
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
         <div>
           <div class="flex items-center gap-2 mb-4">
             <svg class="w-8 h-8 text-sage" fill="currentColor" viewBox="0 0 24 24"><path d="M17 8C8 10 5.9 16.17 3.82 21.34L5.71 22l1-2.3c.5.12 1 .18 1.5.18C19 19.88 22 3 22 3c-1 2-8 2.25-13 3.25S2 11.5 2 13.5s1.75 3.75 1.75 3.75C7 8 17 8 17 8"/></svg>

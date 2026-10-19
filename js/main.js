@@ -62,25 +62,67 @@ function initMobileMenu() {
   const mobileMenu = document.getElementById('mobile-menu');
   if (!menuBtn || !mobileMenu) return;
 
-  menuBtn.addEventListener('click', () => {
-    const isOpen = mobileMenu.classList.contains('translate-x-0');
-    if (isOpen) {
-      mobileMenu.classList.remove('translate-x-0');
-      mobileMenu.classList.add('translate-x-full');
-      menuBtn.innerHTML = '<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>';
-    } else {
-      mobileMenu.classList.remove('translate-x-full');
-      mobileMenu.classList.add('translate-x-0');
-      menuBtn.innerHTML = '<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>';
+  const backdrop = document.createElement('button');
+  backdrop.className = 'mobile-menu-backdrop';
+  backdrop.type = 'button';
+  backdrop.tabIndex = -1;
+  backdrop.setAttribute('aria-label', 'Cerrar menú');
+  document.body.appendChild(backdrop);
+  const desktop = window.matchMedia('(min-width: 1024px)');
+  let isOpen = false;
+
+  const setOpen = (open, restoreFocus = false) => {
+    isOpen = open;
+    mobileMenu.classList.toggle('is-open', open);
+    document.body.classList.toggle('menu-open', open);
+    mobileMenu.inert = !open;
+    mobileMenu.setAttribute('aria-hidden', String(!open));
+    menuBtn.setAttribute('aria-expanded', String(open));
+    menuBtn.setAttribute('aria-label', open ? 'Cerrar menú' : 'Abrir menú');
+    menuBtn.querySelector('path').setAttribute('d', open
+      ? 'M6 18L18 6M6 6l12 12'
+      : 'M4 6h16M4 12h16M4 18h16');
+    if (open) requestAnimationFrame(() => {
+      if (isOpen) mobileMenu.querySelector('a').focus({ preventScroll: true });
+    });
+    else if (restoreFocus) menuBtn.focus({ preventScroll: true });
+  };
+
+  setOpen(false);
+  mobileMenu.addEventListener('transitionend', (event) => {
+    if (isOpen && event.target === mobileMenu && event.propertyName === 'transform') {
+      mobileMenu.querySelector('a').focus({ preventScroll: true });
+    }
+  });
+  menuBtn.addEventListener('click', () => setOpen(!isOpen));
+  backdrop.addEventListener('click', () => setOpen(false, true));
+
+  mobileMenu.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => setOpen(false));
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (!isOpen) return;
+    if (event.key === 'Escape') setOpen(false, true);
+    if (event.key !== 'Tab') return;
+    const controls = [menuBtn, ...mobileMenu.querySelectorAll('a')];
+    const first = controls[0];
+    const last = controls[controls.length - 1];
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
     }
   });
 
-  mobileMenu.querySelectorAll('a').forEach(link => {
-    link.addEventListener('click', () => {
-      mobileMenu.classList.remove('translate-x-0');
-      mobileMenu.classList.add('translate-x-full');
-      menuBtn.innerHTML = '<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>';
-    });
+  desktop.addEventListener('change', () => {
+    if (desktop.matches) {
+      const hadMenuFocus = mobileMenu.contains(document.activeElement) || document.activeElement === menuBtn;
+      setOpen(false);
+      if (hadMenuFocus) document.querySelector('#navbar a').focus({ preventScroll: true });
+    }
   });
 }
 
@@ -93,7 +135,11 @@ function initActiveLink() {
     const href = link.getAttribute('href');
     if (href === currentPage || (currentPage === '' && href === 'index.html')) {
       link.classList.add('active');
+      link.setAttribute('aria-current', 'page');
     }
+  });
+  document.querySelectorAll('#mobile-menu a').forEach(link => {
+    if (link.getAttribute('href') === currentPage) link.setAttribute('aria-current', 'page');
   });
 }
 
@@ -257,7 +303,7 @@ function initPricing() {
   if (!container) return;
 
   container.innerHTML = PRICING.map((plan, idx) => `
-    <div class="relative bg-white rounded-2xl shadow-lg p-8 card-hover reveal ${plan.featured ? 'border-4 border-leaf transform md:scale-105' : ''}" style="transition-delay: ${idx * 100}ms">
+    <div class="relative bg-white rounded-2xl shadow-lg p-8 card-hover reveal ${plan.featured ? 'border-4 border-leaf transform lg:scale-105' : ''}" style="transition-delay: ${idx * 100}ms">
       ${plan.featured ? '<div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-leaf text-white px-4 py-1 rounded-full text-sm font-semibold">Más popular</div>' : ''}
       <div class="text-center mb-6">
         <h3 class="font-display text-3xl font-bold text-forest mb-2">${plan.name}</h3>
@@ -330,7 +376,7 @@ function initClasses() {
   container.innerHTML = CLASSES.map((cls, idx) => `
     <div class="bg-white rounded-2xl p-6 shadow-md card-hover reveal" style="transition-delay: ${idx * 100}ms">
       <div class="text-5xl mb-4">${cls.icon}</div>
-      <div class="flex items-start justify-between mb-3">
+      <div class="flex flex-wrap items-start justify-between gap-2 mb-3">
         <h3 class="font-display text-2xl font-bold text-forest">${cls.title}</h3>
         <span class="px-3 py-1 rounded-full text-xs font-semibold ${levelColors[cls.level] || 'bg-gray-200'}">${cls.level}</span>
       </div>
@@ -345,7 +391,7 @@ function initClasses() {
           <span>${cls.instructor}</span>
         </div>
       </div>
-      <div class="flex items-center justify-between pt-4 border-t border-gray-100">
+      <div class="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-gray-100">
         <span class="text-3xl font-bold text-forest">$${cls.price.toLocaleString('es-CL')}</span>
         <a href="contacto.html" class="text-leaf font-semibold hover:text-forest">Inscribirme →</a>
       </div>
